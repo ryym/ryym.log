@@ -1,0 +1,21 @@
+{{ define "main" }}
+
+<div class="header">
+  <h1>{{ .Title }}</h1>
+</div>
+
+<div class="content post">
+  <div class="person">
+    <div class="person-avatar">TODO: icon</div>
+    <div class="person-description">
+      <p>
+        <a href="https://github.com">@ryym</a>
+      </p>
+      <p>Software Engineer</p>
+    </div>
+  </div>
+
+  {{ .Content }}
+</div>
+
+{{ end }}
