@@ -1,0 +1,41 @@
+baseURL = "http://example.org/"
+languageCode = "ja-jp"
+title = "ryym.log"
+
+[params]
+  subtitle = ""
+  brand = "ryym.log"
+  highlightjs = "androidstudio"
+  dateFormat = "02 Jan 2006, 15:04"
+
+  [[params.social]]
+    name = "GitHub"
+    url = "https://github.com/ryym"
+    icon = "github"
+
+  [[params.social]]
+    name = "twitter"
+    url = "https://twitter.com/ryym64"
+    icon = "twitter"
+
+[menu]
+  [[menu.main]]
+    name = "Posts"
+    pre = "<i class='fa fa-list fa-fw'></i>"
+    weight = 0
+    identifier = "posts"
+    url = "/posts/"
+
+  [[menu.main]]
+    name = "About"
+    pre = "<i class='fa fa-user fa-fw'></i>"
+    weight = 0
+    identifier = "about"
+    url = "/docs/about/"
+
+  [[menu.main]]
+    name = "Tags"
+    pre = "<i class='fa fa-tags fa-fw'></i>"
+    weight = 0
+    identifier = "tags"
+    url = "/tags/"

@@ -1,0 +1,22 @@
+<article class="post-summary">
+  <header>
+    <h2>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </h2>
+
+    <div class="post-summary-meta">
+      <i class="fa fa-calendar fa-fw"></i>
+      <time>
+        {{ dateFormat "02 Jan 2006" .Params.updated }}
+      </time>
+      <!-- . . . -->
+
+      {{ partial "tag_list.html" . }}
+    </div>
+
+  </header>
+
+  <p class="post-summary-description">
+    {{ .Description }}
+  </p>
+</article>
