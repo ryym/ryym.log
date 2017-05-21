@@ -131,6 +131,10 @@ i {
   color: #555;
 }
 
+.post a code:not(.hljs) {
+  color: #3ba1ba;
+}
+
 /* Person */
 
 .person {
