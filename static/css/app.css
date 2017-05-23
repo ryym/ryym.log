@@ -28,6 +28,13 @@ i {
   margin-right: 0.2em;
 }
 
+hr {
+  height: 1px;
+  border: 0;
+  border-bottom: 1px solid rgba(190, 190, 190, 1);
+  margin: 2em 0;
+}
+
 /* Side menu */
 
 .copyright {
