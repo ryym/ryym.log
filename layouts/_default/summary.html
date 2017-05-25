@@ -9,7 +9,11 @@
       <time>
         {{ dateFormat "02 Jan 2006" .Params.updated }}
       </time>
-      <!-- . . . -->
+      {{ if ne .Date (time .Params.updated) }}
+      <a target="_blank" rel="nofollow noopener" href="{{ .Site.Params.repoURL }}commits/master/content/{{ .File.Path }}">
+        . . .
+      </a>
+      {{ end }}
 
       {{ partial "tag_list.html" . }}
     </div>

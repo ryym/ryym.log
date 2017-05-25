@@ -7,6 +7,7 @@ title = "ryym.log"
   brand = "ryym.log"
   highlightjs = "androidstudio"
   dateFormat = "02 Jan 2006, 15:04"
+  repoURL = "https://github.com/ryym/ryym.log/"
 
   [[params.social]]
     name = "GitHub"

@@ -1,10 +1,16 @@
 <div class="post-meta">
   <div>
     <i class="fa fa-calendar fa-fw"></i>
-    updated at: <time>{{ dateFormat "02 Jan 2006, 15:04" .Params.updated }}</time>
-    <a target="_blank" rel="nofollow noopener" href="https://github.com/ryym/ryym.log/commits/master/{{ .File.Path }}">
+    {{ $isUpdated := ne .Date (time .Params.updated) }}
+
+    {{ if $isUpdated }} updated {{ else }} created {{ end }}
+    at: <time>{{ dateFormat "02 Jan 2006, 15:04" .Params.updated }}</time>
+
+    {{ if $isUpdated }}
+    <a target="_blank" rel="nofollow noopener" href="{{ .Site.Params.repoURL }}commits/master/content/{{ .File.Path }}">
       (history)
     </a>
+    {{ end }}
   </div>
   {{ partial "tag_list.html" . }}
 </div>
