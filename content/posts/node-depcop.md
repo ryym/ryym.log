@@ -2,7 +2,7 @@
 date = "2016-03-21T00:00:00+09:00"
 description = "package.jsonの依存関係定義に漏れがないかをチェックする、depcopというパッケージを作った。"
 draft = false
-tags = ["nodejs"]
+tags = ["javascript"]
 title = "package.jsonの依存関係をチェックするライブラリ"
 updated = "2016-03-21T00:00:00+09:00"
 
