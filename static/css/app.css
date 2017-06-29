@@ -35,6 +35,15 @@ hr {
   margin: 2em 0;
 }
 
+blockquote {
+  margin: 20px 2em;
+  margin-left: 1em;
+
+  color: #637488;
+  padding: 0 1em;
+  border-left: 0.1em solid #dfe2e5;
+}
+
 /* Side menu */
 
 .copyright {
