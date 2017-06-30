@@ -4,7 +4,7 @@ description = "Vimのプラグイン管理をNeoBundleからminpacに移行し�
 draft = false
 tags = ["vim"]
 title = "Vim: minpac+αで快適プラグイン管理"
-updated = "2017-06-23T08:01:54+09:00"
+updated = "2017-06-30T23:52:00+09:00"
 
 +++
 
@@ -40,7 +40,7 @@ call minpac#add('Shougo/unite.vim')
 call minpac#add('mattn/emmet-vim')
 " ...
 
-" Install or update
+" Install or update (asynchronously)
 call minpac#update()
 ```
 
