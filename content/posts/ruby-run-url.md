@@ -4,7 +4,7 @@ description = "ruby -cwe 'http://example.com'"
 draft = false
 tags = ["ruby"]
 title = "Rubyで http://example.com を実行する"
-updated = "2017-06-29T21:14:30+09:00"
+updated = "2017-07-07T21:20:00+09:00"
 
 +++
 
@@ -183,9 +183,16 @@ a.rb:13: unknown regexp options - apl
 
 なんと今度は`//`が正規表現リテラルと解釈されたようだ。
 もうおわかりだと思うが、
-この書き方だと`http:`の部分がハッシュのキーとして解釈されている。
+この書き方だと`http:`の部分がHashのキーとして解釈されている。
 そしてその値に`//`という空の正規表現が指定されており、
 更にそのオプション・修飾子として`example`という文字列が指定されている形になる。
+
+```ruby
+# つまりはこう
+regexp = //example
+puts({ http: regexp.com })
+```
+
 しかし`a`, `p`, `l`は無効なオプションなので、
 そんなオプションはないというエラーになっていた ([doc][rubydoc-regexp])。  
 この場合`.com`は正規表現のインスタンスメソッドになるので、
