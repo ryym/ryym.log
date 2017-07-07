@@ -2,7 +2,7 @@
 date = "2017-03-03T22:30:00+09:00"
 description = ""
 draft = false
-tags = ["zaregoto"]
+tags = ["misc"]
 title = "プログラミング小説読みたい"
 updated = "2017-03-03T22:30:00+09:00"
 
