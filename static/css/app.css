@@ -9,10 +9,6 @@ body {
   font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "Meiryo", "メイリオ", "Osaka", "MS PGothic", arial, helvetica, sans-serif;
 }
 
-.header {
-  font-family: "Raleway", Helvetica, Arial, sans-serif
-}
-
 a {
   color: #3ba1ba;
   text-decoration: none;
@@ -98,6 +94,16 @@ blockquote {
   font-size: 80%;
 }
 
+/* Header */
+
+.header {
+  font-family: "Raleway", Helvetica, Arial, sans-serif;
+}
+
+.header h1 {
+  word-wrap: break-word;
+}
+
 /* Posts */
 
 .terms,
@@ -125,13 +131,14 @@ blockquote {
 }
 
 .post h2 {
-  margin-top: 32px;
+  margin-top: 48px;
   padding-bottom: 0.3em;
   border-bottom: 1px solid #eaeaea;
+  line-height: 1.3;
 }
 
 .post h3 {
-  margin: 21px 0 16px;
+  margin: 28px 0 16px;
 }
 
 .post p {
@@ -149,6 +156,13 @@ blockquote {
 
 .post a code:not(.hljs) {
   color: #3ba1ba;
+}
+
+.post pre {
+  white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: auto;
 }
 
 /* Person */
