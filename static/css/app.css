@@ -69,7 +69,23 @@ blockquote {
 .menu-link {
   border-bottom-right-radius: 4px;
   height: 40px;
+  opacity: 0.8;
 }
+
+/*
+ * Override pure-side-menu
+ * Use `.menu-link.active` instead of `:hover, :focus`
+ * to change menu-link appearance correctly.
+ */
+.menu-link:hover,
+.menu-link:focus {
+    background: rgba(0,0,0,0.7);
+}
+.menu-link.active {
+  opacity: 1;
+  background: #000;
+}
+
 
 /* Post summary */
 
