@@ -4,7 +4,7 @@ description = "サブクラスからも見えないメソッドをモジュー�
 draft = false
 tags = ["ruby"]
 title = "Ruby: Mixinモジュールに private メソッドを作る"
-updated = "2017-07-13T22:38:44+09:00"
+updated = "2017-07-21T20:35:00+09:00"
 
 +++
 
@@ -26,17 +26,17 @@ Mixin用モジュールの中で private メソッドを定義しても、それ
 
 ```ruby
 class Animal
-    private
+  private
 
-    def secret
-        "secret of life"
-    end
+  def secret
+    "secret of life"
+  end
 end
 
 class Dog < Animal
-    def bow
-        "I know #{secret}"
-    end
+  def bow
+    "I know #{secret}"
+  end
 end
 
 puts Dog.new.bow  # => "I know secret of life"
@@ -58,25 +58,25 @@ puts Dog.new.bow  # => "I know secret of life"
 
 ```ruby
 module Enumerable
-    # ...
+  # ...
 
-    # Using Refinements here in order not to expose our internal method
-    using Module.new {
-        refine Array do
-            alias :orig_sum :sum
-        end
-    }
-
-    class Array
-        def sum(init = nil, &block) #:nodoc:
-            if init.is_a?(Numeric) || first.is_a?(Numeric)
-                init ||= 0
-                orig_sum(init, &block)
-            else
-                super
-            end
-        end
+  # Using Refinements here in order not to expose our internal method
+  using Module.new {
+    refine Array do
+      alias :orig_sum :sum
     end
+  }
+
+  class Array
+    def sum(init = nil, &block) #:nodoc:
+      if init.is_a?(Numeric) || first.is_a?(Numeric)
+        init ||= 0
+        orig_sum(init, &block)
+      else
+        super
+      end
+    end
+  end
 end
 ```
 
@@ -93,19 +93,19 @@ end
 
 ```ruby
 module StringExtensions
-    refine String do
-        def loudly(volume = 3)
-            "#{self}#{'!' * volume}"
-        end
+  refine String do
+    def loudly(volume = 3)
+      "#{self}#{'!' * volume}"
     end
+  end
 end
 
 module Hello
-    using StringExtensions
+  using StringExtensions
 
-    def self.world
-        "hello, world".loudly
-    end
+  def self.world
+    "hello, world".loudly
+  end
 end
 
 puts Hello.world # => "hello, world!!!"
@@ -133,29 +133,29 @@ puts "good bye".loudly # => NoMethodError
 
 ```ruby
 module Greeter
-    using Module.new {
-        refine Greeter do
-            def world
-                "world"
-            end
-        end
-    }
-
-    def hello
-        "hello, #{world}"
+  using Module.new {
+    refine Greeter do
+      def world
+        "world"
+      end
     end
+  }
+
+  def hello
+    "hello, #{world}"
+  end
 end
 
 class Stuff
-    include Greeter
+  include Greeter
 
-    def greet
-        hello
-    end
+  def greet
+    hello
+  end
 
-    def greet2
-        world
-    end
+  def greet2
+    world
+  end
 end
 
 puts Stuff.new.greet   # => "hello, world"
@@ -167,40 +167,40 @@ puts Stuff.new.greet2  # => undefined local variable or method 'world'
 
 ```ruby
 class Module
-    # Add `privates` method to Module class.
-    def privates(&block)
-        target = self
-        Module.new do
-            refine target do
-                class_eval &block
-            end
-        end
+  # Add `privates` method to Module class.
+  def privates(&block)
+    target = self
+    Module.new do
+      refine target do
+        class_eval &block
+      end
     end
+  end
 end
 
 module Greeter
-    # Define private-like methods using Refinements feature.
-    using privates {
-        def world
-            "world"
-        end
-    }
-
-    def hello
-        "hello, #{world}"
+  # Define private-like methods using Refinements feature.
+  using privates {
+    def world
+      "world"
     end
+  }
+
+  def hello
+    "hello, #{world}"
+  end
 end
 
 class Stuff
-    include Greeter
+  include Greeter
 
-    def greet
-        hello
-    end
+  def greet
+    hello
+  end
 
-    def greet2
-        world
-    end
+  def greet2
+    world
+  end
 end
 
 puts Stuff.new.greet   # => "hello, world"
@@ -224,9 +224,9 @@ puts Stuff.new.greet2  # => undefined local variable or method 'world'
 ```ruby
 # ArgumentError: wrong number of arguments
 using privates do
-    def world
-        "world"
-    end
+  def world
+    "world"
+  end
 end
 # => `using(privates) do; end`
 
@@ -247,15 +247,15 @@ using (privates do; end)
 
 ```ruby
 module Greeter
-    def hello
-        "hello, #{world}"  # Error
-    end
+  def hello
+    "hello, #{world}"  # Error
+  end
 
-    using privates {
-        def world
-            "world"
-        end
-    }
+  using privates {
+    def world
+      "world"
+    end
+  }
 end
 ```
 
