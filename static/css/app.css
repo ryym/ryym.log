@@ -41,6 +41,12 @@ blockquote {
   border-left: 0.1em solid #dfe2e5;
 }
 
+/* Code Block */
+
+code.hljs {
+  font-family: 'Droid Sans Mono', sans-serif;
+}
+
 /* Side menu */
 
 .copyright {
