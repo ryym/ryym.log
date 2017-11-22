@@ -226,3 +226,10 @@ blockquote {
     padding-right: 10px;
   }
 }
+
+
+/* mermaid.js */
+
+.mermaid > svg {
+  max-width: 100% !important;
+}
