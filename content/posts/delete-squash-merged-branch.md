@@ -1,7 +1,7 @@
 +++
 date = "2017-11-19T11:01:14+09:00"
 description = ""
-draft = true
+draft = false
 tags = ["git", "github"]
 title = "GitHub で Squash merge されたブランチを削除する"
 updated = "2017-11-19T11:01:14+09:00"
@@ -47,7 +47,7 @@ git branch -d `git branch --merged | grep -v '*'`
 
 例えば`master`というベースブランチと`foo`というフィーチャーブランチがある時、
 `foo`が`master`に`Squash and merge`されたかどうかを判定するフローを考えてみる。
-もしされていれば、squash された以上`foo`で作られたコミット自体は`master`に1つも残っていないが、
+もしされていても、squash された以上`foo`で作られたコミット自体は`master`に1つも残っていないが、
 代わりに`foo`でなされた修正を全て含む1つのコミットがある事になる。
 よって`master`の履歴にそのようなコミットが見つかれば、
 `foo`が`Squash and merge`されたのだと判断できる。
@@ -61,17 +61,19 @@ git branch -d `git branch --merged | grep -v '*'`
 コミットの SHA-1 ではなく内容でコミットの同一性を判定する方法が必要になる。
 ここで使われるのが[`git cherry`][git-cherry]というコマンドである。
 
-### `git cherry`の概要
+### `git cherry`によるブランチ比較
 
 例えば`master`と`foo`の履歴が以下のようになっているものとする。
 
-```
-        a   b   master
-  ... - * - * - *
-        |
-        - - * - *
-            b'  foo
-```
+<div class="mermaid" style="color: #aaa;">
+graph LR
+  start((...))
+  start --> a((a))
+  a --> b((b))
+  a --> b'((b'))
+  b --> master(master)
+  b' --> foo(foo)
+</div>
 
 - コミット`a`から`foo`が分岐している
 - `b`と`b'`は別コミットだがコミット内容は同じである
@@ -82,19 +84,19 @@ git branch -d `git branch --merged | grep -v '*'`
 この状態で`foo`を`checkout`して`git cherry master`を実行すると、
 `master`に対するコミット単位の差分を表示できる。
 
-```sh
+```rust
 $ git cherry master
-- hash-of-b'
-+ hash-of-head
+- SHA1-of-b'
++ SHA1-of-head
 ```
 
-`hash-of-xx`の部分には実際にはコミットの SHA-1 ハッシュが表示される。
+`SHA1-of-xx`の部分には実際にはコミットの SHA-1 ハッシュが表示される。
 `-`と`+`はそれぞれ以下を意味する。
 
 - `-`: 同じ内容のコミットが`master`にもある
 - `+`: 同じ内容のコミットは`master`にはない
 
-これでコミット`b`と`b'`は別物であっても内容的には同じ、という事がわかる。
+これで`b'`に関しては同じ内容のコミットを master も持っている、という事がわかる。
 このように、`git cherry`を使うとブランチ同士の内容的な差分をコミット単位で確認する事ができる。
 
 つまり、`Squash and merge`されたコミットと同じ内容のコミットを作って`git cherry`で比較すれば、
