@@ -4,7 +4,7 @@ description = "サブクラスからも見えないメソッドをモジュー�
 draft = false
 tags = ["ruby"]
 title = "Ruby: Mixinモジュールに private メソッドを作る"
-updated = "2017-07-21T20:35:00+09:00"
+updated = "2018-02-20T20:30:00+09:00"
 
 +++
 
@@ -25,21 +25,30 @@ Mixin用モジュールの中で private メソッドを定義しても、それ
 インクルードするクラスから見えない private スコープが欲しくなる時が自分はあります。
 
 ```ruby
-class Animal
+module SomeUtil
+  def do_something
+    # ...
+  end
+
   private
 
+  # private method を定義しても...
   def secret
-    "secret of life"
+    "some secret"
   end
 end
 
-class Dog < Animal
-  def bow
+class Someone
+  include SomeUtil
+
+  # include したクラスからは見えちゃう
+  def leak
     "I know #{secret}"
   end
 end
 
-puts Dog.new.bow  # => "I know secret of life"
+p Someone.new.leak
+#=> "I know some secret"
 ```
 
 解決方法をちょっとググってみると、モジュール内に別のクラスを定義してその中にメソッドを置く方法がありました ([例][dont-mix-in-your-privates])。
@@ -108,8 +117,8 @@ module Hello
   end
 end
 
-puts Hello.world # => "hello, world!!!"
-puts "good bye".loudly # => NoMethodError
+p Hello.world # => "hello, world!!!"
+p "good bye".loudly # => NoMethodError
 ```
 
 しかし先程ActiveSupportが使っていた Refinements は、このような例とは違いました。
@@ -158,8 +167,8 @@ class Stuff
   end
 end
 
-puts Stuff.new.greet   # => "hello, world"
-puts Stuff.new.greet2  # => undefined local variable or method 'world'
+p Stuff.new.greet   # => "hello, world"
+p Stuff.new.greet2  # => undefined local variable or method 'world'
 ```
 
 動きました。
@@ -203,8 +212,8 @@ class Stuff
   end
 end
 
-puts Stuff.new.greet   # => "hello, world"
-puts Stuff.new.greet2  # => undefined local variable or method 'world'
+p Stuff.new.greet   # => "hello, world"
+p Stuff.new.greet2  # => undefined local variable or method 'world'
 ```
 
 `using`をメソッド内で使う事は禁止されているので、`refine`の部分だけメソッド化しています。
