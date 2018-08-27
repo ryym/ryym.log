@@ -3,7 +3,7 @@ date = "2018-08-26T16:31:11+09:00"
 description = ""
 draft = true
 tags = ["rust"]
-title = "Rust で DI する時の Tips"
+title = "Rust の decoupled DI"
 updated = "2018-08-26T16:31:11+09:00"
 +++
 
@@ -84,14 +84,13 @@ fn test_foo_api() {
 }
 ```
 
-次にモックではない方の実装ではどうなるでしょうか。
+次にモックではない方の実装はどうなるでしょうか。
 こちらでも`Client`を実装する struct と
 `HaveClient`および`FooApi`を実装する struct の2つがあれば良さそうです。
-実際それでも問題ないのですが、
+しかしそれぞれに具体的な型を用意する代わりに、
 `HaveClient`と`Client`を1つの struct に実装してしまう事もできます。
 
 ```rust
-/// 各種サービス trait を実装する struct。
 struct Hub { /* some state */ }
 
 impl Hub {
@@ -114,7 +113,7 @@ impl FooApi for Hub {}
 
 1つの struct で実装する方法には、所有権に悩まされないメリットがあります。
 例えば`FooApi`の他に`BarApi`など同じ client を使うサービスが他にもあり、
-かつそれぞれが同じ client のインスタンスを使いたい場合 (例えばキャッシュの共有や API の呼び出し制限管理などしたい場合)、
+かつそれぞれが同じ client のインスタンスを使いたい場合 (キャッシュを共有したい、 API の呼び出し制限管理をしたいなど)、
 どこかにある client の参照をそれぞれが持ったり、client を`Rc`/`Arc`で持つ必要が出てきます。
 しかし`Client`も`FooApi`も`BarApi`も全て同じ struct (`Hub`) に実装してしまえば、
 そもそも同じインスタンスなので所有権について考えなくても良くなるわけです。
@@ -307,7 +306,6 @@ trait FooApi: HaveClient {}
 impl<T: FooApi> IsFooApi for T { /* implement */ }
 
 // FooApi のインスタンスを提供する trait.
-// こいつの実装は具体的な型が行う必要がある。
 // type Api の型境界は FooApi ではなく IsFooApi なので、
 // HaveFooApi のモック実装は簡単にできる。
 trait HaveFooApi {
@@ -336,7 +334,10 @@ trait HaveFooService {
 }
 ```
 
-## behavior と implementor
+`HaveFooApi`や`HaveFooService`の実装に関しては、
+内部にサービスのインスタンスを保持する必要があるので具体的な struct (or enum) が実装する形になります。
+
+## behavior trait と implementor trait
 
 前述した`IsFooApi`系 trait と`FooApi`系 trait について、
 自分は便宜的に前者を behavior trait 、 後者を implementor trait と呼んでいます。
@@ -392,13 +393,15 @@ mod service_user {
 ```
 
 (このサンプルコードでは見やすさのため behavior trait と implementor trait でモジュールを分けましたが、
-実際には両者は常に 1:1 になるので、
-各ペアをセットでファイルにした方が管理しやすいと思います。)
+実際には両者は常に対応するペアになるので、
+各ペアをセットでモジュールにした方が管理しやすいと思います。)
 
 ## まとめ
 
+以下の方法で疎結合な DI を実現できました。
+
 - インターフェイス定義と依存関係定義を別の trait にする (behavior & implementor)
 - サービスを使う側は behavior trait にのみ依存する。
-- サービスを実装する側は implementor trait を実装する事で、必要な behavior を満たす。
-
-以上、より疎結合な DI を実現するための Tips でした。
+- サービスを実装する側は implementor trait を実装する。
+- implementor trait を実装している型は必ず対応する behavior trait も実装しているので、
+behavior trait を要求される場面で使用できる。
