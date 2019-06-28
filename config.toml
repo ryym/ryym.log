@@ -21,13 +21,6 @@ title = "ryym.log"
 
 [menu]
   [[menu.main]]
-    name = "Posts"
-    pre = "<i class='fa fa-list fa-fw'></i>"
-    weight = 0
-    identifier = "posts"
-    url = "/posts/"
-
-  [[menu.main]]
     name = "About"
     pre = "<i class='fa fa-user fa-fw'></i>"
     weight = 0
