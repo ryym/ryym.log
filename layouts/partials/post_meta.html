@@ -3,8 +3,7 @@
     <i class="fa fa-calendar fa-fw"></i>
     {{ $isUpdated := ne .Date (time .Params.updated) }}
 
-    {{ if $isUpdated }} updated {{ else }} created {{ end }}
-    at: <time>{{ dateFormat "02 Jan 2006, 15:04" .Params.updated }}</time>
+    created at: <time>{{ dateFormat "02 Jan 2006, 15:04" .Date }}</time>
 
     {{ if $isUpdated }}
     <a target="_blank" rel="nofollow noopener" href="{{ .Site.Params.repoURL }}commits/master/content/{{ .File.Path }}">
