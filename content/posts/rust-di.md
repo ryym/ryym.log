@@ -4,17 +4,9 @@ description = ""
 draft = false
 tags = ["rust"]
 title = "Rust で DI する時の小技"
-updated = "2018-08-26T16:31:11+09:00"
+updated = "2019-07-10T20:54:15+09:00"
 +++
 
-## 概要
-
-- Rust で DI するには。
-    - struct ベースで DI する方法
-    - trait ベースで DI する方法
-- trait ベースだと他の trait への依存関係があるとモックしづらい。どうするか？
-
-## はじめに
 
 最近 [Rust][rust] に触るのがすごく楽しいです。
 で、書いているうちに Rust ではどんな風に DI するのが良いか気になったので、
@@ -27,6 +19,13 @@ Rust の DI に関しては次の記事がとても参考になりました。
 <https://keens.github.io/blog/2017/12/01/rustnodi/>
 
 なお、以降では DI の対象となるコンポーネントをざっくり「サービス」と呼んでいます。
+
+## 概要
+
+- Rust で DI するには。
+    - struct ベースで DI する方法
+    - trait ベースで DI する方法
+- trait ベースだと他の trait への依存関係があるとモックしづらい。どうするか？
 
 ## struct ベースの DI
 
@@ -84,13 +83,6 @@ fn test_b() {
 pub fn use_b<B: SvcB>(b: B) -> String {
     format!("[use] {}", b.b())
 }
-
-#[test]
-fn test_use_b() {
-    let a = ImplA {};
-    let b = ImplB { a };
-    assert_eq!("[use] a: impl-a, b: impl-b", use_b(b));
-}
 ```
 
 ### 考慮事項
@@ -99,16 +91,17 @@ fn test_use_b() {
     - 参照だけを持つ形だとライフタイムパラメータも必要になる。
 - Rust には所有権があるので、複数のサービスに同じサービスのインスタンスを持たせようとすると面倒になりうる。
 
+シンプルではありますが、依存の数だけ型パラメータを持たなければいけないのは辛いですね。
+
 ## trait ベースの DI
 
 - trait のデフォルト実装にロジックを置く。
 - trait だとフィールドは使えないので、代わりに依存する trait を要求する。
-    - もしくは実装なしの getter メソッドを設けてもいい。
 - 1つの struct に複数のサービス trait を集約して実装することもできる。
 
 ### サンプル
 
-クラスベースの思考から離れ、オブジェクトというよりは型でロジックを分離する方法です。  
+こちらはクラスベースの思考から離れ、オブジェクトというよりは型でロジックを分離する方法です。
 以下は先程と同じ`SvcA`と`SvcB`を trait ベースで再実装したものです。
 
 ```rust
@@ -146,12 +139,6 @@ fn test_b() {
 pub fn use_b<B: SvcB>(b: B) -> String {
     format!("[use] {}", b.b())
 }
-
-#[test]
-fn test_use_b() {
-    let svc = Hub {};
-    assert_eq!("[use] a: svc-a, b: svc-b", use_b(svc));
-}
 ```
 
 ### 考慮事項
@@ -162,13 +149,14 @@ fn test_use_b() {
 - 依存する trait をモック実装すればテストできる。
 - 1つの struct に実装を集約して同じインスタンスを使い回せば、所有権に悩まされずに済むかも。
 
-この例では`Hub`という 1 つの struct が`SvcA`と`SvcB`の両方を実装しています。
+struct ベースの方法と違い、依存が増減する度に型パラメータを変更する必要がないので、
+個人的にはこちらをメインに使う方が良さそうな気がしています。
+ただこの方法では、1つの struct がたくさんのサービス trait を実装していく形にはなります (この例でいう`Hub`)。
 この調子で他のサービスも実装していくと`Hub`がどんどん肥大化する感じはしますが、
-実際にはそれをそのまま使うわけではなく、
-`use_b`での使用例のようにその時必要な型としてだけ使うようにすれば、
+実際にはそれをそのまま使うわけではなく、`use_b`での使用例のようにその時必要な型としてだけ使うようにすれば、
 その点はあまり問題なさそうに思えます。
 
-ちなみにもしメソッド名が重複しても、呼び分けるのは簡単です。
+ちなみにもし複数のサービスが同名のメソッドを持っていても、呼び分けるのは簡単なので問題ありません。
 
 ```rust
 trait A1 {
@@ -430,7 +418,7 @@ fn test_use_b() {
 [Playground](https://play.rust-lang.org/?gist=701cdbd3d07ec6a4f2daf19559d62abd&version=stable&mode=debug&edition=2015)
 
 ちなみにここでいう`IsX`や`HaveX`系 trait と `SvcX`系 trait について、
-自分は便宜的に前者を behavior trait 、 後者を implementor trait と呼んでいます。
+自分は便宜的に前者を interface trait, 後者を implementation trait と呼んでいます。
 前者が動作のインターフェイスだけを定義するのに対し、
 後者は実際の実装を依存関係の定義とともに提供するというニュアンスです。
 
@@ -439,6 +427,30 @@ fn test_use_b() {
 - 単純にやるなら struct ベースでもいい。
 - trait ベースでやるとより柔軟。
 - 以下のようにすると、 trait ベースの DI をより疎結合にできる。
-    - インターフェイス定義と依存関係定義を別の trait にする (behavior & implementor)
-    - サービスを使う側は behavior trait にのみ依存する。
-    - サービスを提供する側は implementor trait を実装する。
+    - インターフェイス定義と依存関係定義を別の trait にする (interface trait, implementation trait)。
+    - implementation trait のみが実際に必要となる依存関係を持つ。
+    - implementation trait を実装すると interface trait も自動で実装されるようにする。
+    - サービスを使う側は interface trait にのみ依存する。
+    - サービスを提供する側は implementation trait を実装する。
+
+### 追記
+
+実際に趣味コードでこの方法を使ってみて思ったのですが、 trait のネーミングは逆の方が良いかもしれません。
+
+今までの例:
+
+- interface trait - `IsSvcA`
+- implementation trait - `SvcA`
+
+逆にすると:
+
+- interface trait - `SvcA`
+- implementation trait - `IsSvcA`
+
+というのも外部で使われるのは interface trait の方なので、このネーミングルールで公開してしまうと、
+`Is`始まりという不自然なネーミングが内部の設計
+(interface trait / implementation trait という分離) を外に匂わせる形になるからです。
+であれば、外部で使う方をより普通の`SvcA`のようにし、
+内部の implementation trait を`IsSvcA`のようなネーミングルールで統一する方が良いのではないか、と思いました。
+逆になると`Is`という接頭ルールはあまり直感的じゃない気もしますが。
+
