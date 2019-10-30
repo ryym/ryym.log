@@ -68,7 +68,7 @@ class User {
 }
 
 // Wrong argument order!
-const harry = new User(100, 'harry', 'potter', 'harry@example.com');
+const harry = new User(100, 'Harry', 'Potter', 'harry@example.com');
 console.log(harry.familyName);
 //=> "harry@example.com"
 ```
@@ -99,20 +99,92 @@ class User {
 }
 ```
 
-これをもう少し簡単に実現する方法はないものでしょうか。
+[partial-type]: https://www.typescriptlang.org/docs/handbook/utility-types.html#partialt
+[article-using-partial]: https://qiita.com/Tsuyoshi84/items/e74109e2ccc0f4e625aa
 
+これをもう少し簡単に実現する方法はないものでしょうか。  
 同じ要望を持つ人は少なくないらしく、 TypeScript のリポジトリにはこの件に関する Issue が上がっています。
 
-https://github.com/microsoft/TypeScript/issues/3895
+<https://github.com/microsoft/TypeScript/issues/3895>
 
 クローズされているので対応される可能性は低そうですが、いくつかのワークアラウンドが紹介されています。
 ここではこの Issue で紹介されている方法を踏まえつつ、現時点の TypeScript でやる場合の方法を考慮事項とともにまとめます。
 
 - TypeScript のバージョン: 3.5.2
 
+## ちなみに - `Partial` を使う？
+
+先へ進む前に、 Object 形式で初期化する方法についてググってみると、 [Partial][partial-type] 型を使う方法を紹介している記事がいくつか見つかるので ([例][article-using-partial])、この方法について考えてみます。
+
+```typescript
+class User {
+  givenName: string;
+  familyName: string;
+  middleName?: string;
+
+  constructor(names: Partial<User>) {
+    Object.assign(this, names);
+  }
+
+  fullName(): string {
+    return `${this.givenName} ${this.middleName || ''} ${this.familyName}`;
+  }
+}
+
+const harry = new User({givenName: 'Harry', familyName: 'Potter'});
+console.log(harry.fullName());
+//=> "Harry  Potter"
+```
+
+一見良さそうですが、単純にやるとこの方法にはいくつか問題があります。
+
+### 必須プロパティの初期化を強制できない
+
+`Partial<T>` は `T` の全プロパティを optional にするので、初期化時に必須プロパティが指定されなくてもコンパイルが通ってしまいます。
+
+```typescript
+new User({givenName: 'alice'});
+```
+
+初期化漏れを防ぐには全ての必須プロパティにデフォルト値を用意するしかありませんが、それが適切でないケースも多いでしょう。
+
+
+### メソッドを指定できてしまう
+
+クラスがメソッドを持っていたら、 `Partial<T>` はそれらメソッドも optional なプロパティとして持つ事になります。
+そのため constructor でメソッドまで渡せてしまいます。
+
+```typescript
+new User({fullName: () => 'cracked!'});
+```
+
+メソッドは無視してプロパティだけセットすれば実害はないですが、本来は不要なプロパティを受け付けてしまうのはインターフェイスとして問題でしょう。
+
+というわけでこの単純な方法は避けつつ、もう少し実用的な方法を一から探っていきます。
+
 ## 試み 1. 動的に値を代入する
 
-上記のコードでは、プロパティの定義、引数の定義、値の代入で計3回もプロパティを列挙する必要があります。
+まず Object を引数に取る constructor を普通に書くとどんな感じか、改めて確認します。
+
+```typescript
+// 簡潔さのため、以降の例ではプロパティを id, name のみとします。
+class User {
+  id: number;
+  name: string;
+
+  constructor(
+    props: {
+      id: number,
+      name: string,
+    }
+  ) {
+    this.id = props.id;
+    this.name = props.name;
+  }
+}
+```
+
+このコードでは、プロパティの定義、 constructor の引数型の定義、値の代入で計3回もプロパティを列挙する必要があります。
 まずは[`Object.assign`][object-assign]を使って値の代入だけでも省略してみましょう。
 
 [object-assign]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -126,7 +198,7 @@ class User {
   constructor(
     props: {
       id: number,
-      name: string;
+      name: string,
     }
   ) {
     // これ1行で済む。
