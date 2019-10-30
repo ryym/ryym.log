@@ -187,6 +187,10 @@ code.hljs {
   color: #555;
 }
 
+.post a {
+  word-break: break-all;
+}
+
 .post a code:not(.hljs) {
   color: #3ba1ba;
 }
