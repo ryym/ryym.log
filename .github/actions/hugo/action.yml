@@ -1,0 +1,6 @@
+name: 'Hugo'
+runs:
+  using: 'docker'
+  image: 'docker://ryym/hugo:0.55.6'
+  args:
+    - 'hugo'
