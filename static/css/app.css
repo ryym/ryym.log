@@ -43,6 +43,10 @@ blockquote {
   border-left: 0.1em solid #dfe2e5;
 }
 
+img {
+  max-width: 100%;
+}
+
 /* Code Block */
 
 code.hljs {
