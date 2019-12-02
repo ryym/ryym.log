@@ -1,0 +1,8 @@
+{
+  "name": "ryym.log",
+  "privagte": true,
+  "license": "MIT",
+  "dependencies": {
+    "firebase-tools": "^7.8.1"
+  }
+}
