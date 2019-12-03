@@ -16,12 +16,5 @@ hugo new posts/awesome-post.md
 
 ## Deployment
 
-Currently I use [Firebase Hosting](https://firebase.google.com/docs/hosting/).
-
-```shell
-# Build static files.
-hugo
-
-# Deploy to Firebase.
-firebase deploy
-```
+The site runs on [Firebase Hosting](https://firebase.google.com/docs/hosting/).
+Push to the master branch to release.
