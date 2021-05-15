@@ -3,6 +3,6 @@
   "privagte": true,
   "license": "MIT",
   "dependencies": {
-    "firebase-tools": "^7.8.1"
+    "firebase-tools": "^9.10.2"
   }
 }
