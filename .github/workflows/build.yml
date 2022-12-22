@@ -16,8 +16,12 @@ jobs:
   deploy_to_firebase:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/cred.json
     needs: [build]
     steps:
+      - run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONTENT }}' > $GOOGLE_APPLICATION_CREDENTIALS
+
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
@@ -29,5 +33,5 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: public
-        # https://firebase.google.com/docs/cli#cli-ci-systems
-      - run: npx firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+
+      - run: npx firebase deploy
