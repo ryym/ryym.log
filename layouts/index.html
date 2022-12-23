@@ -5,6 +5,8 @@
   <h2>{{ .Site.Params.subtitle }}</h2>
 </div>
 
-<div class="content">{{ range .Site.RegularPages }} {{ .Render "summary" }} {{ end }}</div>
+<div class="content">
+  {{ range (where .Site.RegularPages "Type" "posts") }} {{ .Render "summary" }} {{ end }}
+</div>
 
 {{ end }}
