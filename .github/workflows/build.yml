@@ -33,5 +33,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: public
+          path: public
 
       - run: npx firebase deploy
