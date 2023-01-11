@@ -270,12 +270,12 @@ udev というものの存在を今回初めて知り、正しく rule を記述
 
 ### GNOME Shell Extension と通信する
 
-Xremap のコア機能は単体の CLI として使えるが、 GNOME で特定のアプリが forground の時のみリマップを有効・無効にするには、別途用意されている [GNOME Shell Extension][xremap-gnome-shell-ext] と併用する必要がある。
+Xremap のコア機能は単体の CLI として使えるが、 GNOME で特定のアプリが foreground の時のみリマップを有効・無効にするには、別途用意されている [GNOME Shell Extension][xremap-gnome-shell-ext] と併用する必要がある。
 しかし shell extension をインストールして有効にしても最初は上手くいかなかった。
 この時に Xremap が Rust 製である事が役に立ち、ローカルに clone して動かしてデバッグして、という調査が簡単にできた。
 調べてみると原因は単純で、 Xremap 本体を root 権限で動かしていたせいだった。
-Xremap と shell extension は [D-Bus][dbus] という仕組みで通信しており、 Xremap は root 権限で、 shell extension はログインユーザ権限で動いていたため、正しく通信できていない状態だった。
-[Xremap の README][xremap-readme] に `sudo` なしで動かす手順が書いてあるので、それを参考に Xremap もログインユーザ権限で動かすようにしたところ、期待通りに動くようになった。
+Xremap と shell extension は [D-Bus][dbus] という仕組みで通信しており、 Xremap は root 権限で、 shell extension はログインユーザー権限で動いていたため、正しく通信できていない状態だった。
+[Xremap の README][xremap-readme] に `sudo` なしで動かす手順が書いてあるので、それを参考に Xremap もログインユーザー権限で動かすようにしたところ、期待通りに動くようになった。
 
 試しに `busctl` などで Xremap の shell extension に直接問い合わせると、今ウィンドウがアクティブなアプリの情報を確認でき、正しく通信できているとわかる。
 
@@ -291,7 +291,7 @@ s "{\"wm_class\":\"gnome-terminal-server\",\"title\":\"Terminal\"}"
 ### 未解決の問題 - `/dev/uinput` の permission
 
 `sudo` なしで Xremap を動かすために udev rule で `/dev/uinput` の permission を設定しているのだが、稀にこれが上手くいかない。
-udev rule 自体はちゃんと動いてて `dev/uinput` は `root` ではなく `uinput` group の持ち物になるし、ログインユーザは `uinput` group に所属しているのだが、なぜか `/dev/uinput` へのアクセスが permission denied になる事がたまーにある。
+udev rule 自体はちゃんと動いてて `dev/uinput` は `root` ではなく `uinput` group の持ち物になるし、ログインユーザーは `uinput` group に所属しているのだが、なぜか `/dev/uinput` へのアクセスが permission denied になる事がたまーにある。
 再起動で直ったり直らなかったりして、いまいち原因がわかっていない。
 `ls` してみると `/dev/uinput` には `+` マークがついてて、こいつは ACL (access control list) という追加のアクセス制限を設定するものらしい。
 なのでその辺に原因があるのかもと思いつつ、稀にしか発生しないので原因を調査できていない。
