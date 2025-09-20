@@ -6,9 +6,7 @@
 
     <div class="post-summary-meta">
       <i class="fa fa-calendar fa-fw"></i>
-      <time>
-        {{ dateFormat "02 Jan 2006" .Params.updated }}
-      </time>
+      <time> {{ dateFormat "02 Jan 2006" .Params.date }} </time>
       {{ if ne .Date (time .Params.updated) }}
       <a
         target="_blank"
