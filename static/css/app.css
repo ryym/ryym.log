@@ -47,6 +47,11 @@ img {
   max-width: 100%;
 }
 
+summary {
+  /* Override display:block in pure CSS to display the triangle indicator. */
+  display: list-item;
+}
+
 /* Code Block */
 
 code.hljs {
