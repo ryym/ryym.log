@@ -5,10 +5,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - uses: ./.github/actions/hugo
       - run: ls public
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: public
           path: public
@@ -22,17 +22,18 @@ jobs:
     steps:
       - run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_CONTENT }}' > $GOOGLE_APPLICATION_CREDENTIALS
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v5
         with:
-          node-version: '16.x'
+          node-version: '22.x'
 
       - run: npm install
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v5
         with:
           name: public
           path: public
 
+      - run: ls public
       - run: npx firebase deploy
