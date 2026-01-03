@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   {{ partial "head.html" . }}
   <body>
     <div id="layout">
       {{ partial "sidemenu.html" . }}
-      <main id="main">
-        {{ block "main" . }}{{ end }}
-      </main>
+      <main id="main">{{ block "main" . }}{{ end }}</main>
     </div>
 
     <!-- JavaScript -->

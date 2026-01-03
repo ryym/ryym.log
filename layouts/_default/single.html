@@ -4,12 +4,7 @@
   <h1>{{ .Title }}</h1>
 </div>
 
-<div class="content post">
-  {{ partial "post_meta.html" . }}
-  {{ .Content }}
-</div>
-<footer class="footer">
-  ryym.log
-</footer>
+<div class="content post">{{ partial "post_meta.html" . }} {{ .Content }}</div>
+<footer class="footer">ryym.log</footer>
 
 {{ end }}

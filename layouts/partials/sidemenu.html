@@ -5,18 +5,16 @@
 
 <div id="menu">
   {{ with .Site.Params.brand }}
-    <a class="pure-menu-heading brand" href="/">{{ . | safeHTML }}</a>
+  <a class="pure-menu-heading brand" href="/">{{ . | safeHTML }}</a>
   {{ end }}
 
   <!-- Menu links -->
   <div class="pure-menu">
     <ul class="pure-menu-list">
       {{ range .Site.Menus.main }}
-        <li class="pure-menu-item">
-          <a class="pure-menu-link" href="{{ .URL }}">
-            {{ .Pre }}{{ .Name }}
-          </a>
-        </li>
+      <li class="pure-menu-item">
+        <a class="pure-menu-link" href="{{ .URL }}"> {{ .Pre }}{{ .Name }} </a>
+      </li>
       {{end}}
     </ul>
   </div>

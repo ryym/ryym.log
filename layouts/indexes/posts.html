@@ -5,16 +5,12 @@
 </div>
 <div class="content">
   <ul class="posts">
-
-  {{ range .Data.Pages }}
-  <li>
-    <time>
-      {{ .Date.Format "02 Jan 2006" }}
-    </time>
-    <a href="{{ .Permalink }}">{{ .Title }}</a>
-  </li>
-  {{ end }}
-
+    {{ range .Data.Pages }}
+    <li>
+      <time> {{ .Date.Format "02 Jan 2006" }} </time>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
   </ul>
 </div>
 

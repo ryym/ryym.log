@@ -5,13 +5,12 @@
 </div>
 <div class="content">
   <ul class="terms">
-  {{ $data := .Data }}
-  {{ range $key, $value := .Data.Terms.ByCount }}
+    {{ $data := .Data }} {{ range $key, $value := .Data.Terms.ByCount }}
     <li>
       <a href="{{ $value.Name | urlize }}">{{ $value.Name }}</a>
       <span>&#40;{{ $value.Count }}&#41;</span>
     </li>
-  {{ end }}
+    {{ end }}
   </ul>
 </div>
 

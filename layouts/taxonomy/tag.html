@@ -4,10 +4,6 @@
   <h1>{{ .Title }}</h1>
 </div>
 
-<div class="content">
-  {{ range .Data.Pages }}
-    {{ .Render "summary"}}
-  {{ end }}
-</div>
+<div class="content">{{ range .Data.Pages }} {{ .Render "summary"}} {{ end }}</div>
 
 {{ end }}
