@@ -14,11 +14,6 @@ title = "ryym.log"
     url = "https://github.com/ryym"
     icon = "github"
 
-  [[params.social]]
-    name = "twitter"
-    url = "https://twitter.com/ryym64"
-    icon = "twitter"
-
 [menu]
   [[menu.main]]
     name = "About"
