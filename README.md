@@ -17,4 +17,4 @@ hugo new posts/awesome-post.md
 ## Deployment
 
 The site runs on [Firebase Hosting](https://firebase.google.com/docs/hosting/).
-Push to the master branch to release.
+Push to the main branch to release.

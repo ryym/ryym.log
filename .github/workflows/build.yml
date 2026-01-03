@@ -14,7 +14,7 @@ jobs:
           path: public
 
   deploy_to_firebase:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
       GOOGLE_APPLICATION_CREDENTIALS: /tmp/cred.json
